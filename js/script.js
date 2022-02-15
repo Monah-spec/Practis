@@ -1,5 +1,3 @@
-"use strict";
-
 const movieDB = {
   movies: [
     "Логан",
@@ -11,8 +9,8 @@ const movieDB = {
 };
 
 const marketing = document.querySelectorAll(".promo__adv img"),
-  poster_bg = document.querySelector(".promo__bg"),
-  genre = poster_bg.querySelector(".promo__genre"),
+  posterBg = document.querySelector(".promo__bg"),
+  genre = posterBg.querySelector(".promo__genre"),
   list = document.querySelector(".promo__interactive-list"),
   addForm = document.querySelector(".add"),
   input = addForm.querySelector(".adding__input"),
@@ -32,49 +30,44 @@ const createMovieList = (films, parent) => {
 </li>
     `;
 
-  document.querySelectorAll('.delete').forEach((busket, index) => {
-    busket.addEventListener('click', () => {
-      busket.parentElement.remove()
-      movieDB.movies.splice(index, 1)
+    document.querySelectorAll(".delete").forEach((busket, index) => {
+      busket.addEventListener("click", () => {
+        busket.parentElement.remove();
+        movieDB.movies.splice(index, 1);
 
-      createMovieList(movieDB.movies, list)
-    })
-  })
+        createMovieList(movieDB.movies, list);
+      });
+    });
   });
 };
 
 const makeChanges = () => {
   genre.textContent = "Драма";
 
-  poster_bg.style.backgroundImage = 'url("img/bg.jpg")';
+  posterBg.style.backgroundImage = 'url("img/bg.jpg")';
 };
 
-const sortFilms = arr => arr.sort();
+const sortFilms = (arr) => arr.sort();
 
 addForm.addEventListener("submit", (event) => {
   event.preventDefault();
   let newFilm = input.value;
   const favorite = checkbox.checked;
   if (newFilm) {
-
     if (newFilm.length > 21) {
-      newFilm = `${newFilm.substring(0, 22)}...`
+      newFilm = `${newFilm.substring(0, 22)}...`;
     }
 
     if (favorite) {
-      console.log('Добавляем любимый фильм!')
+      console.log("Добавляем любимый фильм!");
     }
     movieDB.movies.push(newFilm);
 
     createMovieList(movieDB.movies, list);
-  } 
+  }
   event.target.reset();
 });
 
 deleteMarket(marketing);
 makeChanges();
 createMovieList(movieDB.movies, list);
-
-
-
-
