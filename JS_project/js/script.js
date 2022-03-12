@@ -37,7 +37,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Timer
 
-  const deadLine = '2022-03-10';
+  const deadLine = '2022-04-24';
 
   const getTimeRemaining = endtime => {
     const time = Date.parse(endtime) - Date.parse(new Date()),
@@ -87,4 +87,38 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   setClock('.timer', deadLine);
+
+  // Modal
+
+  const modalTrigger = document.querySelectorAll('[data-modal]'),
+          closeModalBtn = document.querySelector('[data-close]'),
+               modal = document.querySelector('.modal');
+  function closeModal () {
+    modal.classList.add('hide');
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+
+  modalTrigger.forEach(btn => {
+    btn.addEventListener('click', () => {
+      modal.classList.add('show');
+      modal.classList.remove('hide');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  closeModalBtn.addEventListener('click', closeModal);
+
+  modal.addEventListener('click', event => {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.code === 'Escape' && modal.classList.contains('show')) {
+      closeModal();
+    }
+  });
 });
