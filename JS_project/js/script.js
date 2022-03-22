@@ -1,33 +1,33 @@
-window.addEventListener('DOMContentLoaded', () => {
-// Tabs
+window.addEventListener("DOMContentLoaded", () => {
+  // Tabs
 
-  const tabs = document.querySelectorAll('.tabheader__item'),
-        tabsContent = document.querySelectorAll('.tabcontent'),
-        tabsParent = document.querySelector('.tabheader__items');
+  const tabs = document.querySelectorAll(".tabheader__item"),
+    tabsContent = document.querySelectorAll(".tabcontent"),
+    tabsParent = document.querySelector(".tabheader__items");
 
   const hideTabContent = () => {
-    tabsContent.forEach(tab => {
-      tab.classList.add('hide');
-      tab.classList.remove('show');
+    tabsContent.forEach((tab) => {
+      tab.classList.add("hide");
+      tab.classList.remove("show");
     });
 
-    tabs.forEach(tab => tab.classList.remove('tabheader__item_active'));
+    tabs.forEach((tab) => tab.classList.remove("tabheader__item_active"));
   };
 
   const showTabContent = (index = 0) => {
-    tabsContent[index].classList.add('show', 'fade');
-    tabsContent[index].classList.remove('hide');
-    tabs[index].classList.add('tabheader__item_active');
+    tabsContent[index].classList.add("show", "fade");
+    tabsContent[index].classList.remove("hide");
+    tabs[index].classList.add("tabheader__item_active");
   };
 
   hideTabContent();
   showTabContent();
 
-  tabsParent.addEventListener('click', event => {
+  tabsParent.addEventListener("click", (event) => {
     const target = event.target;
-    if (target && target.classList.contains('tabheader__item')) {
+    if (target && target.classList.contains("tabheader__item")) {
       tabs.forEach((tab, index) => {
-        if (target == tab) {
+        if (target === tab) {
           hideTabContent();
           showTabContent(index);
         }
@@ -35,26 +35,26 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-// Timer
+  // Timer
 
-  const deadLine = '2022-04-24';
+  const deadLine = "2022-04-24";
 
-  const getTimeRemaining = endtime => {
+  const getTimeRemaining = (endtime) => {
     const time = Date.parse(endtime) - Date.parse(new Date()),
-          daysMs = Math.floor(time / (1000 * 60 * 60 * 24)),
-          hoursMs = Math.floor((time / (1000 * 60 * 60) % 24)),
-          minutesMs = Math.floor((time / 1000 / 60) % 60),
-          secondsMs = Math.floor((time / 1000) % 60);
+      daysMs = Math.floor(time / (1000 * 60 * 60 * 24)),
+      hoursMs = Math.floor((time / (1000 * 60 * 60)) % 24),
+      minutesMs = Math.floor((time / 1000 / 60) % 60),
+      secondsMs = Math.floor((time / 1000) % 60);
     return {
-      'total': time,
-      'days': daysMs,
-      'hours': hoursMs,
-      'minutes': minutesMs,
-      'seconds': secondsMs,
+      total: time,
+      days: daysMs,
+      hours: hoursMs,
+      minutes: minutesMs,
+      seconds: secondsMs,
     };
   };
 
-  function getZero (num) {
+  function getZero(num) {
     if (num >= 0 && num < 10) {
       return `0${num}`;
     } else {
@@ -64,15 +64,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const setClock = (selector, endtime) => {
     const timer = document.querySelector(selector),
-          days = timer.querySelector('#days'),
-          hours = timer.querySelector('#hours'),
-          minutes = timer.querySelector('#minutes'),
-          seconds = timer.querySelector('#seconds'),
-          timeInterval = setInterval(updateClock, 1000);
+      days = timer.querySelector("#days"),
+      hours = timer.querySelector("#hours"),
+      minutes = timer.querySelector("#minutes"),
+      seconds = timer.querySelector("#seconds"),
+      timeInterval = setInterval(updateClock, 1000);
 
-    updateClock();      
+    updateClock();
 
-    function updateClock () {
+    function updateClock() {
       const time = getTimeRemaining(endtime);
 
       days.innerHTML = getZero(time.days);
@@ -86,39 +86,52 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  setClock('.timer', deadLine);
+  setClock(".timer", deadLine);
 
   // Modal
 
-  const modalTrigger = document.querySelectorAll('[data-modal]'),
-          closeModalBtn = document.querySelector('[data-close]'),
-               modal = document.querySelector('.modal');
-  function closeModal () {
-    modal.classList.add('hide');
-    modal.classList.remove('show');
-    document.body.style.overflow = '';
+  const modalTrigger = document.querySelectorAll("[data-modal]"),
+    closeModalBtn = document.querySelector("[data-close]"),
+    modal = document.querySelector(".modal");
+
+  function openModal () {
+      modal.classList.add("show");
+      modal.classList.remove("hide");
+      document.body.style.overflow = "hidden";
+      clearInterval(modalTimerId);
   }
 
+  function closeModal() {
+    modal.classList.add("hide");
+    modal.classList.remove("show");
+    document.body.style.overflow = "";
+  }
 
-  modalTrigger.forEach(btn => {
-    btn.addEventListener('click', () => {
-      modal.classList.add('show');
-      modal.classList.remove('hide');
-      document.body.style.overflow = 'hidden';
-    });
+  modalTrigger.forEach((btn) => {
+    btn.addEventListener("click", openModal);
   });
 
-  closeModalBtn.addEventListener('click', closeModal);
+  closeModalBtn.addEventListener("click", closeModal);
 
-  modal.addEventListener('click', event => {
+  modal.addEventListener("click", (event) => {
     if (event.target === modal) {
       closeModal();
     }
   });
 
-  document.addEventListener('keydown', event => {
-    if (event.code === 'Escape' && modal.classList.contains('show')) {
+  document.addEventListener("keydown", (event) => {
+    if (event.code === "Escape" && modal.classList.contains("show")) {
       closeModal();
     }
   });
+
+  const modalTimerId = setTimeout(openModal, 5000);
+
+  function showModalByScroll() {
+    if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+      openModal();
+      window.removeEventListener('scroll', showModalByScroll);
+    }
+  }
+  window.addEventListener('scroll', showModalByScroll);
 });
